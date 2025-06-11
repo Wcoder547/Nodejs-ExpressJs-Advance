@@ -1,0 +1,142 @@
+====================================================================
+             📥 Express.js Request Object Cheat Sheet
+====================================================================
+
+The `req` object in Express represents the HTTP request
+and contains properties and methods for retrieving request data.
+
+====================================================================
+🔸 REQUEST PROPERTIES
+====================================================================
+
+--------------------------------------------------------------------
+🔹 req.params
+--------------------------------------------------------------------
+* Purpose: Contains route parameters (from URL path).
+* Example URL: /user/:id → /user/42
+* Access:
+    req.params.id   // "42"
+
+--------------------------------------------------------------------
+🔹 req.query
+--------------------------------------------------------------------
+* Purpose: Contains URL query string parameters.
+* Example URL: /search?term=express
+* Access:
+    req.query.term  // "express"
+
+--------------------------------------------------------------------
+🔹 req.body
+--------------------------------------------------------------------
+* Purpose: Contains data sent in the request body (POST, PUT).
+* Requires middleware like `express.json()` or `express.urlencoded()`.
+* Access:
+    req.body.name   // e.g., "Waseem"
+
+--------------------------------------------------------------------
+🔹 req.cookies
+--------------------------------------------------------------------
+* Purpose: Contains cookies sent by the client.
+* Requires cookie-parser middleware.
+* Access:
+    req.cookies.sessionID  // e.g., "abc123"
+
+--------------------------------------------------------------------
+🔹 req.hostname
+--------------------------------------------------------------------
+* Purpose: Hostname of the request.
+* Access:
+    req.hostname  // e.g., "localhost"
+
+--------------------------------------------------------------------
+🔹 req.ip
+--------------------------------------------------------------------
+* Purpose: IP address of the client.
+* Access:
+    req.ip  // e.g., "::1" or "192.168.0.1"
+
+--------------------------------------------------------------------
+🔹 req.ips
+--------------------------------------------------------------------
+* Purpose: Array of IPs, if behind a proxy and `trust proxy` is enabled.
+* Access:
+    req.ips  // [ '203.0.113.1', '70.41.3.18' ]
+
+--------------------------------------------------------------------
+🔹 req.method
+--------------------------------------------------------------------
+* Purpose: HTTP method used in the request.
+* Access:
+    req.method  // "GET", "POST", etc.
+
+--------------------------------------------------------------------
+🔹 req.originalUrl
+--------------------------------------------------------------------
+* Purpose: The full original request URL (with query string).
+* Access:
+    req.originalUrl  // "/profile/edit?tab=info"
+
+--------------------------------------------------------------------
+🔹 req.path
+--------------------------------------------------------------------
+* Purpose: The pathname portion of the URL.
+* Access:
+    req.path  // "/profile/edit"
+
+--------------------------------------------------------------------
+🔹 req.protocol
+--------------------------------------------------------------------
+* Purpose: Protocol used for the request.
+* Access:
+    req.protocol  // "http" or "https"
+
+--------------------------------------------------------------------
+🔹 req.secure
+--------------------------------------------------------------------
+* Purpose: Returns true if protocol is HTTPS.
+* Access:
+    req.secure  // true or false
+
+--------------------------------------------------------------------
+🔹 req.route
+--------------------------------------------------------------------
+* Purpose: Contains the route definition that matched.
+* Access:
+    req.route.path   // e.g., "/user/:id"
+
+====================================================================
+🔸 REQUEST METHODS
+====================================================================
+
+--------------------------------------------------------------------
+🔹 req.accepts(types)
+--------------------------------------------------------------------
+* Purpose: Checks if the request accepts certain content types.
+* Returns best match or false.
+* Example:
+    req.accepts('html');      // "html" or false
+    req.accepts(['json', 'html']); // "json" or "html"
+
+--------------------------------------------------------------------
+🔹 req.get(headerName)
+--------------------------------------------------------------------
+* Purpose: Returns the specified HTTP request header.
+* Example:
+    req.get('User-Agent');  // e.g., "Mozilla/5.0"
+
+--------------------------------------------------------------------
+🔹 req.ip
+--------------------------------------------------------------------
+* Purpose: Returns the remote client's IP address.
+* (Alias of the req.ip property)
+* Example:
+    req.ip  // e.g., "127.0.0.1"
+
+--------------------------------------------------------------------
+🔹 req.range(size)
+--------------------------------------------------------------------
+* Purpose: Parses Range header for partial content requests.
+* Returns ranges or -1/undefined if invalid.
+* Example:
+    req.range(1000);  // [{ start: 0, end: 499 }, { start: 500, end: 999 }]
+
