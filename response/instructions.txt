@@ -1,0 +1,110 @@
+====================================================================
+           📦 Express.js Response Methods (Cheat Sheet)
+====================================================================
+
+These methods are used on the `res` (response) object to control
+what and how data is sent from the server to the client.
+
+--------------------------------------------------------------------
+🔹 res.send()
+--------------------------------------------------------------------
+* Purpose: Sends a response of various types (string, HTML, array, object, Buffer).
+* Auto-sets Content-Type based on input type.
+* Example:
+    res.send("Hello, world!");         // Sends text
+    res.send({ name: "Waseem" });      // Sends JSON
+    res.send([1, 2, 3]);               // Sends JSON array
+
+--------------------------------------------------------------------
+🔹 res.json()
+--------------------------------------------------------------------
+* Purpose: Sends a JSON response (Content-Type = application/json).
+* Automatically stringifies JavaScript objects.
+* Example:
+    res.json({ success: true, user: "Waseem" });
+
+--------------------------------------------------------------------
+🔹 res.jsonp()
+--------------------------------------------------------------------
+* Purpose: Sends a JSON response with JSONP support (for cross-domain).
+* Requires query param (like ?callback=myFunc).
+* Example:
+    res.jsonp({ message: "Hello" });   // Output: myFunc({ message: "Hello" })
+
+--------------------------------------------------------------------
+🔹 res.redirect([status], path)
+--------------------------------------------------------------------
+* Purpose: Redirects the client to another URL.
+* Optional status code (default = 302).
+* Example:
+    res.redirect("/login");
+    res.redirect(301, "https://github.com/");
+
+--------------------------------------------------------------------
+🔹 res.render(view, [locals])
+--------------------------------------------------------------------
+* Purpose: Renders a view using a template engine (EJS, Pug, etc.).
+* Requires: app.set("view engine", "ejs")
+* Example:
+    res.render("profile", { user: "Waseem" });
+
+--------------------------------------------------------------------
+🔹 res.download(path, [filename], [callback])
+--------------------------------------------------------------------
+* Purpose: Sends a file as an attachment for download.
+* Optional filename renames the downloaded file.
+* Example:
+    res.download("./files/report.pdf");
+
+--------------------------------------------------------------------
+🔹 res.sendFile(path, [options], [callback])
+--------------------------------------------------------------------
+* Purpose: Sends a static file to the client.
+* Use absolute path (with __dirname).
+* Example:
+    res.sendFile(__dirname + "/images/photo.jpg");
+
+--------------------------------------------------------------------
+🔹 res.end([data])
+--------------------------------------------------------------------
+* Purpose: Ends the response process. Optionally sends final data.
+* Common in low-level streams.
+* Example:
+    res.end("Goodbye!");
+
+--------------------------------------------------------------------
+🔹 res.sendStatus(statusCode)
+--------------------------------------------------------------------
+* Purpose: Sets HTTP status code and sends its string message.
+* Example:
+    res.sendStatus(404);  // "Not Found"
+
+--------------------------------------------------------------------
+🔹 res.headersSent
+--------------------------------------------------------------------
+* Purpose: Returns true if headers have already been sent.
+* Use to avoid sending multiple responses.
+* Example:
+    if (res.headersSent) {
+        console.log("Headers already sent!");
+    }
+
+--------------------------------------------------------------------
+🔹 res.set(field, [value])
+--------------------------------------------------------------------
+* Purpose: Sets response headers.
+* Can set one or multiple headers.
+* Example:
+    res.set("Content-Type", "text/plain");
+    res.set({
+        "X-Powered-By": "Node.js",
+        "Custom-Header": "Waseem"
+    });
+
+--------------------------------------------------------------------
+🔹 res.get(field)
+--------------------------------------------------------------------
+* Purpose: Reads value of a previously set header.
+* Example:
+    const contentType = res.get("Content-Type");
+
