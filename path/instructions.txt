@@ -1,0 +1,141 @@
+NODE.JS PATH MODULE – COMPLETE NOTES WITH EXAMPLES
+
+===============================
+1. path MODULE – PURPOSE
+===============================
+- The `path` module provides utilities for working with file and directory paths.
+- Helps normalize, combine, and extract information from file system paths.
+- Works cross-platform (Windows vs Linux path separators).
+
+IMPORTING:
+import path from "path"; // ES6
+// OR
+const path = require("path"); // CommonJS
+
+EXAMPLE FILE PATH:
+const filePath = "/user/john/docs/report.pdf";
+
+===================================
+2. path.basename(filePath)
+===================================
+- Returns the last part of the path (file name with extension)
+
+Example:
+console.log(path.basename(filePath)); 
+// Output: report.pdf
+
+With extension removed:
+console.log(path.basename(filePath, ".pdf")); 
+// Output: report
+
+===================================
+3. path.dirname(filePath)
+===================================
+- Returns the directory name of the path (everything before the file)
+
+Example:
+console.log(path.dirname(filePath)); 
+// Output: /user/john/docs
+
+===================================
+4. path.extname(filePath)
+===================================
+- Returns the extension of the file (includes the dot)
+
+Example:
+console.log(path.extname(filePath)); 
+// Output: .pdf
+
+Useful for validating or filtering file types:
+if (path.extname(filePath) === ".pdf") {
+    console.log("This is a PDF file");
+}
+
+===================================
+5. path.parse(filePath)
+===================================
+- Returns an object with path components:
+  root, dir, base, name, ext
+
+Example:
+console.log(path.parse(filePath));
+
+Output:
+{
+  root: '/',
+  dir: '/user/john/docs',
+  base: 'report.pdf',
+  ext: '.pdf',
+  name: 'report'
+}
+
+Use case:
+const { name, ext } = path.parse(filePath);
+console.log(name); // report
+console.log(ext);  // .pdf
+
+===================================
+6. path.join(...paths)
+===================================
+- Joins multiple segments into a single path
+- Normalizes slashes automatically
+
+Example:
+const joinedPath = path.join("/user", "john", "docs", "report.pdf");
+console.log(joinedPath); 
+// Output: /user/john/docs/report.pdf
+
+Also handles redundant slashes:
+path.join("/user/", "/john", "docs///report.pdf")
+// Output: /user/john/docs/report.pdf
+
+===================================
+7. path.resolve(...paths)
+===================================
+- Resolves an absolute path from a sequence of paths
+- Starts from right and works leftward until an absolute path is found
+
+Example:
+const absolutePath = path.resolve("docs", "file.txt");
+console.log(absolutePath); 
+// Output: /current/working/directory/docs/file.txt
+
+Another example:
+path.resolve("/user", "john", "docs", "file.txt")
+// Output: /user/john/docs/file.txt
+
+Difference between join and resolve:
+- `join` simply concatenates
+- `resolve` returns an absolute path
+
+===================================
+BONUS: PLATFORM-INDEPENDENT PATHS
+===================================
+Use path.sep for cross-platform separators
+
+Example:
+console.log(path.sep); 
+// Output: '\' on Windows, '/' on POSIX
+
+Useful for writing platform-independent code:
+const safePath = ['user', 'john', 'data'].join(path.sep);
+
+===================================
+SUMMARY
+===================================
+✔ path.basename()   → File name (with or without extension)
+✔ path.dirname()    → Directory of the file
+✔ path.extname()    → File extension (e.g., .txt, .pdf)
+✔ path.parse()      → Breaks path into components
+✔ path.join()       → Joins path segments cleanly
+✔ path.resolve()    → Converts to absolute path
+
+Use these methods for:
+✅ File validation
+✅ Dynamic path generation
+✅ Cross-platform compatibility
+✅ Cleaner and safer code
+
+==========================
+END OF NOTES
+==========================
