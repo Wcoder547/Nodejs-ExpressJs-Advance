@@ -1,0 +1,206 @@
+NODE.JS BUILT-IN MODULES & FILE SYSTEM (FS) – COMPLETE NOTES
+
+=====================
+1. BUILT-IN MODULES
+=====================
+
+Node.js comes with core modules that don't require installation.
+
+--- FS (File System) ---
+Used to perform operations like read/write/create/delete files and folders.
+
+--- PATH ---
+Helps work with file and directory paths.
+
+--- OS (Operating System) ---
+Provides system-related info (CPU, memory, platform, uptime, etc.)
+
+--- HTTP ---
+Used to create an HTTP server and handle requests/responses.
+
+==========================
+2. FILE SYSTEM (fs MODULE)
+==========================
+
+To use File System module:
+import fs from 'fs'; // ES6
+// OR
+const fs = require('fs'); // CommonJS
+
+===================
+3. BASIC OPERATIONS
+===================
+
+--- fs.readFile(filePath, callback) ---
+Reads the content of a file asynchronously.
+
+Example:
+fs.readFile('output.txt', 'utf-8', (err, data) => {
+    if (err) {
+        console.log("File not found");
+        return;
+    }
+    console.log(data); // File content
+});
+
+--- fs.writeFile(filePath, data, callback) ---
+Creates or overwrites a file with the given content.
+
+Example:
+fs.writeFile('output.txt', 'Hello World!', (err) => {
+    if (err) throw err;
+    console.log('File written successfully');
+});
+
+--- fs.appendFile(filePath, data, callback) ---
+Appends new data to an existing file (or creates it if it doesn't exist).
+
+Example:
+fs.appendFile('output.txt', '\nNew line added', (err) => {
+    if (err) throw err;
+    console.log('Data appended');
+});
+
+--- fs.rename(oldPath, newPath, callback) ---
+Renames a file or moves it to a different directory.
+
+Example:
+fs.rename('output.txt', 'newName.txt', (err) => {
+    if (err) throw err;
+    console.log('File renamed');
+});
+
+--- fs.copyFile(src, dest, callback) ---
+Copies the content of one file to another.
+
+Example:
+fs.copyFile('source.txt', 'copy.txt', (err) => {
+    if (err) throw err;
+    console.log('File copied');
+});
+
+--- fs.unlink(filePath, callback) ---
+Deletes a file.
+
+Example:
+fs.unlink('deleteMe.txt', (err) => {
+    if (err) throw err;
+    console.log('File deleted');
+});
+
+--- fs.readdir(folderPath, callback) ---
+Reads the contents of a directory.
+
+Example:
+fs.readdir('./folder', (err, files) => {
+    if (err) throw err;
+    console.log(files); // ['file1.txt', 'file2.js']
+});
+
+--- fs.mkdir(folderPath, options, callback) ---
+Creates a new folder.
+
+Example:
+fs.mkdir('./newFolder', { recursive: true }, (err) => {
+    if (err) throw err;
+    console.log('Folder created');
+});
+
+--- fs.rmdir(folderPath, callback) ---
+Removes an empty folder (use fs.rm for non-empty).
+
+Example:
+fs.rmdir('./newFolder', (err) => {
+    if (err) throw err;
+    console.log('Folder deleted');
+});
+
+--- fs.stat(filePath, callback) ---
+Gets file or directory information (size, modified date, etc.).
+
+Example:
+fs.stat('file.txt', (err, stats) => {
+    if (err) throw err;
+    console.log(stats.isFile()); // true
+});
+
+--- fs.access(filePath, mode, callback) ---
+Checks the file/folder existence and permissions.
+
+Example:
+fs.access('file.txt', fs.constants.F_OK, (err) => {
+    console.log(err ? 'File does not exist' : 'File exists');
+});
+
+===================================
+4. FILE FORMATS YOU CAN HANDLE
+===================================
+
+--- Text File (.txt) ---
+Used for plain text content (logs, configs, notes)
+
+--- JSON File (.json) ---
+Used for data storage or exchange (APIs, configs)
+
+Example:
+const data = { name: "Ali", age: 25 };
+fs.writeFile('user.json', JSON.stringify(data), () => {})
+
+--- PDF File (.pdf) ---
+Needs external libraries like `pdfkit` or `pdf-parse` to generate/read
+
+--- Images (e.g., .png, .jpg) ---
+Can be read using `fs.readFile()` as a buffer, or served via HTTP
+
+--- Videos (e.g., .mp4, .webm) ---
+Same as images. Used for streaming, media services
+
+--- Music Files (.mp3, .wav) ---
+Served via streaming with proper content-type headers
+
+===================
+5. HTTP + FILE SYSTEM
+===================
+
+Example: Read and send a file using HTTP server
+
+import http from 'http';
+import fs from 'fs';
+
+const server = http.createServer((req, res) => {
+    fs.readFile('output.txt', (err, data) => {
+        if (err) {
+            res.writeHead(500, { 'Content-Type': 'text/plain' });
+            return res.end('File not found!');
+        }
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
+        res.end(data);
+    });
+});
+
+server.listen(3000, () => console.log('Server running on port 3000'));
+
+==========================
+SUMMARY OF FS FUNCTIONS
+==========================
+
+✔ fs.readFile      → Read a file
+✔ fs.writeFile     → Write or overwrite file
+✔ fs.appendFile    → Add data to existing file
+✔ fs.rename        → Rename/move file
+✔ fs.copyFile      → Copy file
+✔ fs.unlink        → Delete file
+✔ fs.readdir       → Read folder contents
+✔ fs.mkdir         → Create folder
+✔ fs.rmdir         → Remove empty folder
+✔ fs.stat          → Get file/folder info
+✔ fs.access        → Check file access or existence
+
+BONUS:
+✔ Use 'fs/promises' for modern promise-based async/await operations
+
+==========================
+END OF NOTES
+==========================
+
+You can use these notes for both interviews and daily practice.
