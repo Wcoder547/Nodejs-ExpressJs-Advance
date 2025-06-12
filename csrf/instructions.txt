@@ -1,0 +1,88 @@
+CSRF TOKEN IN EXPRESS.JS - QUICK REVISION NOTES
+
+WHAT IS CSRF?
+- CSRF = Cross-Site Request Forgery
+- It is an attack that tricks the user into submitting unwanted actions from a trusted site
+- Happens when malicious websites send requests to another site where the user is authenticated
+- Example: auto form submission using user's existing cookies
+
+HOW TO PREVENT IT?
+- Use CSRF tokens in forms and verify them on the server side
+- A CSRF token is a random secret that must be included in requests (usually in POST, PUT, DELETE)
+
+CSRF PROTECTION IN EXPRESS USING csurf:
+
+1. INSTALL REQUIRED PACKAGES:
+npm install csurf cookie-parser
+
+2. BASIC SETUP:
+import express from "express";
+import cookieParser from "cookie-parser";
+import csrf from "csurf";
+
+const app = express();
+
+// Middlewares
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+// Initialize CSRF protection with cookies
+const csrfProtection = csrf({ cookie: true });
+app.use(csrfProtection);
+
+3. GENERATE & SEND CSRF TOKEN:
+app.get("/form", (req, res) => {
+    res.send(`
+        <form action="/process" method="POST">
+            <input type="hidden" name="_csrf" value="${req.csrfToken()}">
+            <input type="text" name="data" />
+            <button type="submit">Submit</button>
+        </form>
+    `);
+});
+
+4. VERIFY CSRF TOKEN ON SUBMISSION:
+app.post("/process", (req, res) => {
+    // If CSRF token is valid, request is processed
+    res.send("Data is processed securely!");
+});
+
+5. CUSTOM TOKEN SENDING (for APIs with AJAX):
+- You can send token in headers instead of form
+- Frontend fetch example:
+  fetch("/api/submit", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+          "csrf-token": "<get token from server first>"
+      },
+      body: JSON.stringify({ data: "test" })
+  });
+
+- Server setup to read token from header:
+  const csrfProtection = csrf({ cookie: true });
+  app.use(csrfProtection);
+
+  // Token endpoint
+  app.get("/csrf-token", (req, res) => {
+      res.json({ csrfToken: req.csrfToken() });
+  });
+
+6. ERROR HANDLING FOR INVALID/MISSING TOKEN:
+app.use((err, req, res, next) => {
+    if (err.code === "EBADCSRFTOKEN") {
+        res.status(403).send("Invalid CSRF token");
+    } else {
+        next(err);
+    }
+});
+
+TIPS:
+- Use CSRF protection only on state-changing routes (POST, PUT, DELETE)
+- GET requests should not modify data and should not require CSRF tokens
+- Use HTTPS and SameSite cookies for added protection
+
+SUMMARY:
+- CSRF is a serious web security risk
+- Use csurf middleware with cookie-parser
+- Always validate the token on server side before processing form/data
