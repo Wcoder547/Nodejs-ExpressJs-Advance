@@ -1,0 +1,149 @@
+SENDING EMAIL USING NODEMAILER – COMPLETE NOTES
+
+=====================
+1. WHAT IS NODEMAILER?
+=====================
+
+Nodemailer is a Node.js module used to send emails easily via SMTP, OAuth2, or other protocols.
+
+It supports plain text, HTML, attachments, and more.
+
+====================
+2. INSTALL NODEMAILER
+====================
+
+Run the following command in your Node.js project:
+
+npm install nodemailer
+
+===================
+3. BASIC SETUP
+===================
+
+--- Import the module ---
+const nodemailer = require('nodemailer');
+
+--- Create a transporter ---
+This handles the email service and credentials.
+
+Example (Gmail):
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'your-email@gmail.com',
+        pass: 'your-app-password' // Use App Password if 2FA is enabled
+    }
+});
+
+===========================
+4. DEFINE MAIL OPTIONS
+===========================
+
+This includes sender, receiver, subject, and message.
+
+const mailOptions = {
+    from: 'your-email@gmail.com',
+    to: 'receiver@example.com',
+    subject: 'Test Email from Nodemailer',
+    text: 'This is a test email sent using Node.js and Nodemailer.'
+};
+
+=========================
+5. SEND THE EMAIL
+=========================
+
+transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+        return console.log('Error:', error);
+    }
+    console.log('Email sent:', info.response);
+});
+
+===============================
+6. USE ENVIRONMENT VARIABLES
+===============================
+
+For security, do not hardcode credentials.
+
+--- .env file ---
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
+
+--- Code using dotenv ---
+require('dotenv').config();
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
+
+==========================
+7. SEND HTML EMAIL CONTENT
+==========================
+
+You can send HTML instead of plain text:
+
+const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: 'user@example.com',
+    subject: 'Welcome',
+    html: '<h1>Hello User</h1><p>This is a test email.</p>'
+};
+
+==========================
+8. SEND EMAIL WITH ATTACHMENTS
+==========================
+
+Add an attachments array:
+
+const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: 'user@example.com',
+    subject: 'With Attachment',
+    text: 'Please find the attached file.',
+    attachments: [
+        {
+            filename: 'test.txt',
+            path: './test.txt'
+        }
+    ]
+};
+
+====================================
+9. TROUBLESHOOTING COMMON ISSUES
+====================================
+
+✔ Use app-specific passwords if using Gmail with 2FA  
+✔ Ensure "Less secure apps" access is enabled (if not using app passwords)  
+✔ Always check your spam folder  
+✔ Use correct SMTP settings for non-Gmail services
+
+====================================
+10. ALTERNATIVE TRANSPORT OPTIONS
+====================================
+
+You can also use:
+
+- Custom SMTP (Mailgun, SendGrid, etc.)
+- OAuth2 authentication for secure login
+
+==========================
+SUMMARY OF NODEMAILER FLOW
+==========================
+
+✔ Install nodemailer  
+✔ Create transporter with SMTP details  
+✔ Define mail options  
+✔ Use sendMail() to send  
+✔ Handle success and error responses  
+✔ Use .env for secure credentials  
+✔ Optionally use HTML and attachments  
+
+==========================
+END OF NOTES
+==========================
+
+Use these notes to integrate email functionality in real-world apps like signup confirmation, password reset, notifications, etc.
