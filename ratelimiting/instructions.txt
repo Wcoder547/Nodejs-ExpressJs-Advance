@@ -1,0 +1,98 @@
+ EXPRESS-RATE-LIMIT - QUICK REVISION NOTES
+
+WHAT IS RATE LIMITING?
+- Rate limiting restricts the number of requests a client (IP) can make to a server within a time window.
+- Helps prevent abuse, brute-force attacks, and DoS attacks.
+- Example: Allow max 100 requests per 15 minutes per IP.
+
+PACKAGE: express-rate-limit
+
+1. INSTALLATION:
+npm install express-rate-limit
+
+2. BASIC SETUP:
+import rateLimit from "express-rate-limit";
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per window
+    standardHeaders: true, // Return rate limit info in `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    message: "Too many requests, please try again later."
+});
+
+app.use(limiter); // Apply to all routes
+
+3. APPLY LIMITER TO SPECIFIC ROUTES:
+app.use("/auth", limiter);
+app.use("/api/posts", limiter);
+
+4. CUSTOM RESPONSE MESSAGE:
+const customLimiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    max: 5,
+    handler: (req, res, next) => {
+        res.status(429).json({
+            error: "Too many requests. Please try again in 10 minutes."
+        });
+    }
+});
+
+app.use("/login", customLimiter);
+
+5. ADVANCED OPTIONS:
+- skip: function to skip applying rate limit to certain requests
+- keyGenerator: custom function to identify clients (by IP, user ID, etc.)
+- store: use Redis/MongoDB stores for distributed rate limiting
+
+Example using skip:
+const adminBypassLimiter = rateLimit({
+    windowMs: 1 * 60 * 1000,
+    max: 10,
+    skip: (req, res) => req.user && req.user.role === "admin"
+});
+
+app.use("/dashboard", adminBypassLimiter);
+
+TIPS:
+- Always use on login, register, password reset routes
+- You can combine with helmet and csurf for extra security
+- Use distributed stores for load-balanced servers (e.g., Redis)
+
+SUMMARY:
+- express-rate-limit protects your app from abuse
+- Easy to use and configure
+- Customize window, max, message, and scope
+- Apply globally or per route as needed
+
+
+=====================
+ HELMET (helmet)
+=====================
+- Sets various secure HTTP headers
+- Helps protect against well-known vulnerabilities
+
+INSTALL:
+npm install helmet
+
+USAGE:
+import helmet from "helmet";
+app.use(helmet());
+
+DEFAULT HEADERS ADDED:
+- X-DNS-Prefetch-Control
+- X-Frame-Options
+- Strict-Transport-Security
+- X-Content-Type-Options
+- Referrer-Policy
+- Content-Security-Policy (can be customized)
+
+CUSTOMIZE CSP:
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://trusted.cdn.com"],
+    },
+  })
+);
