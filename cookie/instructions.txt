@@ -1,0 +1,77 @@
+COOKIE & SESSION - QUICK REVISION NOTES
+
+COOKIE:
+- Cookies are used to store temporary data on the client-side (browser).
+- Stored as small text files.
+- Limited storage (usually around 4KB).
+- Automatically sent with every HTTP request to the server.
+
+SESSION:
+- Sessions store temporary data on the server-side.
+- A session ID is stored in a cookie on the client, and used to access server-side session data.
+
+COMMON USE CASES OF COOKIES:
+- User Authentication
+- Shopping Cart
+- Flash Messages
+- Remember Me / Auto Login
+- Theme Preferences
+- Language Selection
+- Form Data Preservation
+
+INSTALLATION:
+npm install cookie-parser
+
+USAGE IN EXPRESS:
+import cookieParser from "cookie-parser";
+
+app.use(cookieParser()); // For unsigned cookies
+app.use(cookieParser('secretKey')); // For signed cookies
+
+STORE COOKIE:
+res.cookie('key', 'value', {
+    maxAge: 86400000,       // 24 hours = 1000 * 60 * 60 * 24
+    httpOnly: true,         // Cookie can't be accessed by JavaScript
+    secure: true,           // Send only over HTTPS (set to false in development)
+    sameSite: 'Strict',     // Options: 'Strict', 'Lax', 'None'
+    signed: true            // Sign the cookie with secret key
+});
+
+READ COOKIE:
+// For unsigned cookies
+req.cookies.key
+
+// For signed cookies
+req.signedCookies.key
+
+DELETE COOKIE:
+res.clearCookie('key');
+
+TIPS:
+- Use httpOnly: true for sensitive cookies (e.g., authentication).
+- Use secure: true only on HTTPS.
+- sameSite: 'Strict' prevents cross-site attacks like CSRF.
+- Do not store sensitive info directly in cookies.
+
+EXAMPLE:
+
+app.get('/set-cookie', (req, res) => {
+    res.cookie('authToken', 'abc123', {
+        maxAge: 86400000,
+        httpOnly: true,
+        secure: false,
+        sameSite: 'Lax',
+        signed: true
+    });
+    res.send('Cookie set!');
+});
+
+app.get('/read-cookie', (req, res) => {
+    const token = req.signedCookies.authToken;
+    res.send(`Your token is: ${token}`);
+});
+
+app.get('/delete-cookie', (req, res) => {
+    res.clearCookie('authToken');
+    res.send('Cookie deleted.');
+});
