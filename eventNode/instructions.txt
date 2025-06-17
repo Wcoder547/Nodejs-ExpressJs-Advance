@@ -1,0 +1,148 @@
+Node.js EventEmitter – Beginner Notes
+======================================
+
+What is EventEmitter?
+---------------------
+- EventEmitter is a core Node.js module.
+- Used to create and handle custom events.
+- Perfect for building event-driven(🔹 Event-Driven in Node.js
+
+Node.js is event-driven by design — it’s great for handling I/O operations like:
+
+    Reading files
+
+    Receiving HTTP requests
+
+    Listening to user input
+
+    Responding to timers or data
+
+Example:
+
+const fs = require('fs');
+
+fs.readFile('file.txt', (err, data) => {
+  if (err) throw err;
+  console.log('File content:', data.toString());
+});
+
+Here:
+
+    Node starts reading the file.
+
+    Doesn’t wait.
+
+    When the file is ready (event), it fires the callback.) and asynchronous applications.
+
+How to Import and Use:
+----------------------
+const EventEmitter = require('events');
+const emitter = new EventEmitter();
+
+---------------------------------------
+Key Methods with Use Cases and Examples
+---------------------------------------
+
+1. emitter.on(eventName, listener)
+-----------------------------------
+Purpose: Registers a listener (function) for a specific event.
+
+Example:
+---------
+emitter.on('userLoggedIn', (username) => {
+  console.log(`${username} has logged in.`);
+});
+
+emitter.emit('userLoggedIn', 'Waseem');
+
+Output:
+Waseem has logged in.
+
+2. emitter.emit(eventName, [args])
+-----------------------------------
+Purpose: Triggers (emits) an event and runs all registered listeners.
+
+Example: (Same as above)
+emitter.emit('userLoggedIn', 'Waseem');
+
+3. emitter.once(eventName, listener)
+-------------------------------------
+Purpose: Registers a listener that will be called only once.
+
+Example:
+---------
+emitter.once('firstVisit', () => {
+  console.log('Welcome to our app for the first time!');
+});
+
+emitter.emit('firstVisit');  // Will run
+emitter.emit('firstVisit');  // Won’t run again
+
+Output:
+Welcome to our app for the first time!
+
+4. emitter.off(eventName, listener)
+------------------------------------
+Purpose: Removes a registered listener.
+
+Example:
+---------
+
+emitter.on('login', (username)=>{
+ console.log(`${username} just logged in.`);         
+});
+emitter.emit('login', 'Ali'); // Output: Ali just logged in.
+
+emitter.off('login', (username)=>{
+ console.log(`${username} just logged in.`);         
+});
+emitter.emit('login', 'Ahmed'); // No output
+
+---------------------------------------
+Full Example: Chat Application Simulation
+---------------------------------------
+
+const EventEmitter = require('events');
+const chat = new EventEmitter();
+
+chat.on('join', (user) => {
+  console.log(`${user} joined the chat.`);
+});
+
+chat.on('message', (user, message) => {
+  console.log(`[${user}]: ${message}`);
+});
+
+chat.once('leave', (user) => {
+  console.log(`${user} left the chat.`);
+});
+
+chat.emit('join', 'Waseem');
+chat.emit('message', 'Waseem', 'Hello everyone!');
+chat.emit('leave', 'Waseem');
+chat.emit('leave', 'Waseem');  // Won’t run again
+
+Output:
+Waseem joined the chat.
+[Waseem]: Hello everyone!
+Waseem left the chat.
+
+---------------------------------------
+Real-World Use Cases
+---------------------------------------
+
+- User logs in: Emit 'login' event
+- Data received from WebSocket: Emit 'data' event
+- File upload complete: Emit 'uploadComplete'
+- Sensor reading available (IoT): Emit 'sensorData'
+- Database connected: Emit 'dbConnected'
+- Notify all modules about config change: Emit 'configUpdated'
+
+---------------------------------------
+Tips:
+---------------------------------------
+- Always register listeners (.on or .once) before emitting.
+- You can pass multiple arguments using emit(eventName, arg1, arg2, ...).
+- Use named functions if you want to remove listeners later with .off.
+
+Happy Coding! 🚀
