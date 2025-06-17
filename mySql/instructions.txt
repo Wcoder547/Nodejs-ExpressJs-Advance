@@ -1,0 +1,208 @@
+===========================
+MYSQL WITH NODE.JS – COMPLETE NOTES
+===========================
+
+===========================
+1. INTRODUCTION
+===========================
+- MySQL is a relational database used to store structured data.
+- Node.js can interact with MySQL using third-party packages (e.g., `mysql`, `mysql2`).
+- Use SQL queries to perform CRUD operations (Create, Read, Update, Delete).
+
+===========================
+2. INSTALLING MYSQL PACKAGE
+===========================
+
+npm install mysql         // Basic package
+npm install mysql2        // Modern version with promise support
+
+===========================
+3. CONNECTING TO MYSQL DATABASE
+===========================
+
+--- Basic connection using mysql ---
+
+const mysql = require("mysql");
+
+const db = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "testdb"
+});
+
+db.connect((err) => {
+    if (err) throw err;
+    console.log("Connected to MySQL!");
+});
+
+--- Using mysql2 with async/await support ---
+
+const mysql = require("mysql2/promise");
+
+async function connectDB() {
+    const db = await mysql.createConnection({
+        host: "localhost",
+        user: "root",
+        password: "",
+        database: "testdb"
+    });
+    console.log("Connected using mysql2!");
+}
+connectDB();
+
+===========================
+4. CREATE DATABASE & TABLE
+===========================
+
+--- Create a new database ---
+
+const sql = "CREATE DATABASE testdb";
+db.query(sql, (err, result) => {
+    if (err) throw err;
+    console.log("Database created");
+});
+
+--- Create a table ---
+
+const sql = `
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    email VARCHAR(255),
+    age INT
+)`;
+
+db.query(sql, (err, result) => {
+    if (err) throw err;
+    console.log("Table created");
+});
+
+===========================
+5. INSERT DATA
+===========================
+
+const user = { name: "John Doe", email: "john@example.com", age: 25 };
+const sql = "INSERT INTO users SET ?";
+db.query(sql, user, (err, result) => {
+    if (err) throw err;
+    console.log("User inserted, ID:", result.insertId);
+});
+
+===========================
+6. READ / SELECT DATA
+===========================
+
+--- Select all users ---
+
+const sql = "SELECT * FROM users";
+db.query(sql, (err, results) => {
+    if (err) throw err;
+    console.log("Users:", results);
+});
+
+--- Select with WHERE condition ---
+
+const sql = "SELECT * FROM users WHERE age > ?";
+db.query(sql, [20], (err, results) => {
+    if (err) throw err;
+    console.log("Filtered users:", results);
+});
+
+===========================
+7. UPDATE DATA
+===========================
+
+const sql = "UPDATE users SET age = ? WHERE id = ?";
+db.query(sql, [30, 1], (err, result) => {
+    if (err) throw err;
+    console.log("Rows updated:", result.affectedRows);
+});
+
+===========================
+8. DELETE DATA
+===========================
+
+const sql = "DELETE FROM users WHERE id = ?";
+db.query(sql, [1], (err, result) => {
+    if (err) throw err;
+    console.log("User deleted:", result.affectedRows);
+});
+
+===========================
+9. USING EXPRESS WITH MYSQL
+===========================
+
+const express = require("express");
+const mysql = require("mysql");
+const app = express();
+
+app.use(express.json());
+
+const db = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "testdb"
+});
+
+db.connect(err => {
+    if (err) throw err;
+    console.log("Connected to DB");
+});
+
+app.get("/users", (req, res) => {
+    db.query("SELECT * FROM users", (err, results) => {
+        if (err) return res.status(500).send(err);
+        res.json(results);
+    });
+});
+
+app.listen(3000, () => {
+    console.log("Server running on port 3000");
+});
+
+===========================
+10. COMMON MYSQL ERRORS
+===========================
+
+- ECONNREFUSED → MySQL is not running or wrong host/port.
+- ER_ACCESS_DENIED_ERROR → Wrong user/password.
+- ER_BAD_DB_ERROR → Database does not exist.
+- ER_PARSE_ERROR → Syntax error in SQL query.
+
+===========================
+11. USEFUL MYSQL QUERIES
+===========================
+
+-- Show databases
+SHOW DATABASES;
+
+-- Select database
+USE testdb;
+
+-- Show tables
+SHOW TABLES;
+
+-- Describe a table
+DESCRIBE users;
+
+===========================
+12. TOOLS
+===========================
+
+- phpMyAdmin: GUI for MySQL (via XAMPP or LAMP)
+- MySQL Workbench: Standalone MySQL GUI
+- DBeaver: Universal DB GUI
+
+===========================
+13. RECOMMENDATION
+===========================
+
+- Use `mysql2/promise` for modern async/await style.
+- Always sanitize input to prevent SQL injection.
+- Use environment variables for credentials.
+
+===========================
+END OF NOTES
+===========================
