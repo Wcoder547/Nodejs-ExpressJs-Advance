@@ -1,4 +1,6 @@
+===============================
 NODE.JS PATH MODULE – COMPLETE NOTES WITH EXAMPLES
+===============================
 
 ===============================
 1. path MODULE – PURPOSE
@@ -8,7 +10,7 @@ NODE.JS PATH MODULE – COMPLETE NOTES WITH EXAMPLES
 - Works cross-platform (Windows vs Linux path separators).
 
 IMPORTING:
-import path from "path"; // ES6
+import path from "path"; // ES6 (with "type": "module" in package.json)
 // OR
 const path = require("path"); // CommonJS
 
@@ -55,7 +57,7 @@ if (path.extname(filePath) === ".pdf") {
 5. path.parse(filePath)
 ===================================
 - Returns an object with path components:
-  root, dir, base, name, ext
+  root, dir, base, ext, name
 
 Example:
 console.log(path.parse(filePath));
@@ -109,9 +111,9 @@ Difference between join and resolve:
 - `resolve` returns an absolute path
 
 ===================================
-BONUS: PLATFORM-INDEPENDENT PATHS
+8. PLATFORM-INDEPENDENT PATHS
 ===================================
-Use path.sep for cross-platform separators
+Use `path.sep` for cross-platform separators
 
 Example:
 console.log(path.sep); 
@@ -121,21 +123,18 @@ Useful for writing platform-independent code:
 const safePath = ['user', 'john', 'data'].join(path.sep);
 
 ===================================
-SUMMARY
+9. ES MODULES: __dirname and __filename
 ===================================
-✔ path.basename()   → File name (with or without extension)
-✔ path.dirname()    → Directory of the file
-✔ path.extname()    → File extension (e.g., .txt, .pdf)
-✔ path.parse()      → Breaks path into components
-✔ path.join()       → Joins path segments cleanly
-✔ path.resolve()    → Converts to absolute path
+In ES Modules (`type: "module"` in package.json), `__dirname` and `__filename` are not available directly.
 
-Use these methods for:
-✅ File validation
-✅ Dynamic path generation
-✅ Cross-platform compatibility
-✅ Cleaner and safer code
+You can use `import.meta.url` and convert it:
 
-==========================
-END OF NOTES
-==========================
+```js
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+console.log("DirName:-", __dirname);
+console.log("FileName:-", __filename);
