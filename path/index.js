@@ -9,13 +9,13 @@ const port = 3000;
 // console.log("FileName:-" + import.meta.url);
 
 app.get("/", (req, res) => {
-  const filepath = "/user/john/docs/report.pdf";
-  console.log("Basename" + path.basename(filepath));
-  console.log("Dirname" + path.dirname(filepath));
-  console.log("Extname" + path.extname(filepath));
-  const parsed = path.parse(filepath);
-  console.log(parsed);
-  //   {
+  // const filepath = "/user/john/docs/report.pdf";
+  // console.log("Basename" + path.basename(filepath));
+  // console.log("Dirname" + path.dirname(filepath));
+  // console.log("Extname" + path.extname(filepath));
+  // const parsed = path.parse(filepath);
+  // console.log(parsed);
+  // //   {
   //   root: '/',
   //   dir: '/user/john/docs',
   //   base: 'report.pdf',

@@ -1,0 +1,163 @@
+===============================
+NODE.JS URL MODULE – COMPLETE NOTES WITH EXAMPLES
+===============================
+
+===============================
+1. url MODULE – PURPOSE
+===============================
+- The `url` module provides utilities for URL resolution and parsing.
+- Especially useful for working with web addresses in HTTP servers, APIs, and routers.
+
+IMPORTING:
+import { URL } from 'url';           // ES6 Modules
+// OR
+const { URL } = require('url');      // CommonJS
+
+EXAMPLE URL:
+const siteURL = new URL("https://example.com:8080/path/page?name=waseem#section1");
+
+===============================
+2. URL OBJECT PROPERTIES
+===============================
+- Once you create a `URL` object, you can access the following properties:
+
+```js
+console.log(siteURL);
+````
+
+Output:
+
+```
+URL {
+  href: 'https://example.com:8080/path/page?name=waseem#section1',
+  origin: 'https://example.com:8080',
+  protocol: 'https:',
+  username: '',
+  password: '',
+  host: 'example.com:8080',
+  hostname: 'example.com',
+  port: '8080',
+  pathname: '/path/page',
+  search: '?name=waseem',
+  searchParams: URLSearchParams { 'name' => 'waseem' },
+  hash: '#section1'
+}
+```
+
+\===============================
+3\. url.href
+============
+
+* Full URL string.
+  console.log(siteURL.href);
+  // Output: [https://example.com:8080/path/page?name=waseem#section1](https://example.com:8080/path/page?name=waseem#section1)
+
+\===============================
+4\. url.origin
+==============
+
+* Protocol + hostname + port.
+  console.log(siteURL.origin);
+  // Output: [https://example.com:8080](https://example.com:8080)
+
+\===============================
+5\. url.protocol
+================
+
+* Returns protocol used (ends with colon).
+  console.log(siteURL.protocol);
+  // Output: https:
+
+\===============================
+6\. url.hostname & url.port
+===========================
+
+* `hostname` gives domain.
+* `port` gives the port number.
+
+console.log(siteURL.hostname); // example.com
+console.log(siteURL.port);     // 8080
+
+\===============================
+7\. url.pathname
+================
+
+* The path after the host (before `?` and `#`)
+  console.log(siteURL.pathname);
+  // Output: /path/page
+
+\===============================
+8\. url.search & url.searchParams
+=================================
+
+* `.search` gives full query string.
+* `.searchParams` gives a useful object to work with queries.
+
+console.log(siteURL.search); // ?name=waseem
+
+Access query values:
+console.log(siteURL.searchParams.get("name"));
+// Output: waseem
+
+Add a query param:
+siteURL.searchParams.append("age", "25");
+console.log(siteURL.toString());
+// Output includes \&age=25
+
+Loop through all params:
+for (const \[key, value] of siteURL.searchParams) {
+console.log(`${key}: ${value}`);
+}
+
+\===============================
+9\. url.hash
+============
+
+* Returns the part after `#`
+
+console.log(siteURL.hash);
+// Output: #section1
+
+\===============================
+10\. UPDATE URL DYNAMICALLY
+===========================
+
+siteURL.pathname = "/new/path";
+siteURL.searchParams.set("name", "ali");
+console.log(siteURL.toString());
+// Output: updated full URL
+
+\===============================
+11\. COMMONJS EXAMPLE
+=====================
+
+```js
+const { URL } = require('url');
+const myURL = new URL('https://site.com:3000/learn?id=42#top');
+
+console.log(myURL.pathname);       // /learn
+console.log(myURL.searchParams.get('id'));  // 42
+```
+
+\===============================
+12\. URL CLASS VS LEGACY API
+============================
+
+⚠️ Don't use legacy `url.parse()` and `url.format()` unless needed.
+Use modern `URL` class from `'url'` module (added in Node v7+).
+
+\===============================
+SUMMARY
+=======
+
+✔ `URL` class → modern and powerful way to work with URLs
+✔ `.searchParams` → easily read/write query strings
+✔ `.pathname`, `.host`, `.port`, `.protocol` → break down URL
+✔ Use `toString()` to rebuild modified URL
+
+Used in:
+✅ HTTP request parsing
+✅ API development
+✅ Routing systems
+✅ URL validation and manipulation
+
