@@ -1,0 +1,111 @@
+How Node.js Works Behind the Scenes
+===================================
+
+Node.js is built to be FAST and EFFICIENT using an event-driven, non-blocking architecture. It uses several components under the hood to handle asynchronous operations like reading files, processing network requests, etc.
+
+----------------------------------------------------------
+🚀 Core Components of Node.js Architecture (Step-by-Step)
+----------------------------------------------------------
+
+1. Application Code (Your Code)
+-------------------------------
+- You write JavaScript code to build server logic.
+- Example: Reading files, making HTTP requests, responding to users.
+
+2. V8 JavaScript Engine
+------------------------
+- Created by Google, used in Chrome and Node.js.
+- Converts your JavaScript code into fast machine code.
+- Runs synchronously and handles basic operations.
+
+3. Node.js Bindings (Node API)
+-------------------------------
+- These are C++ bindings that connect your JavaScript code to lower-level system operations.
+- Acts as a bridge between JavaScript (V8) and the OS or Libuv.
+
+4. Libuv (Asynchronous I/O Engine)
+----------------------------------
+- A C library that provides Node.js the ability to perform asynchronous operations.
+- Handles the **Event Loop**, **Thread Pool**, and **I/O operations** like:
+  - File system access
+  - Networking
+  - Timers
+
+5. Event Loop
+-------------
+- The heart of Node.js’s asynchronous nature.
+- Continuously checks for events in the **Event Queue** and processes them one by one.
+- Executes callback functions when their tasks are completed (non-blocking).
+
+6. Event Queue
+--------------
+- A queue that stores callback functions waiting to be executed.
+- As tasks (like file read or network request) finish, their associated callbacks are pushed here.
+
+7. Worker Threads (Thread Pool)
+-------------------------------
+- Used by Libuv to handle blocking operations in background threads.
+- Supports 4 threads by default.
+- Examples:
+  - Reading large files
+  - Compressing data
+  - DNS lookups
+
+8. OS Operations
+----------------
+- For tasks that the OS can handle efficiently (e.g., networking), Libuv delegates the job directly to the OS without using threads.
+
+9. Callback Execution
+---------------------
+- Once an async operation completes (via OS or thread pool), its callback is placed in the event queue.
+- The event loop picks it up and runs it.
+
+----------------------------------------------------------
+🧠 Summary of Flow (How Node.js Executes Your Code)
+----------------------------------------------------------
+
+1. Your JavaScript code runs inside V8.
+2. When async tasks appear (file read, network), Node uses Libuv.
+3. Libuv either:
+   - Sends it to the OS (if non-blocking, like networking).
+   - Sends it to a thread pool (for blocking operations).
+4. When the task finishes, a callback is pushed to the Event Queue.
+5. Event Loop picks up the callback and executes it via V8.
+6. The cycle repeats — this is the non-blocking, event-driven model.
+
+----------------------------------------------------------
+🔥 Key Features of Node.js Behind-the-Scenes
+----------------------------------------------------------
+
+- Single-threaded but handles concurrent tasks using Event Loop + Thread Pool.
+- Efficient for I/O-heavy tasks (e.g., APIs, file servers, real-time apps).
+- Event-driven: Triggers events and executes handlers as they arrive.
+- Non-blocking: Does not wait — continues running other tasks.
+
+----------------------------------------------------------
+📝 Real-Life Analogy
+----------------------------------------------------------
+
+Imagine a restaurant with:
+- 1 Waiter (Event Loop)
+- Chef staff in the kitchen (Worker Threads)
+- Customers place orders (I/O operations)
+- Waiter takes the order, gives it to kitchen, and moves to next customer.
+- When the food is ready, the waiter brings it back to the right table (Callback Execution).
+
+This is how Node.js handles multiple operations efficiently.
+
+----------------------------------------------------------
+✅ Use Cases Where Node.js Shines
+----------------------------------------------------------
+
+- REST APIs and microservices
+- Real-time chat apps
+- File upload/download services
+- IoT device communication
+- Streaming platforms
+- CLI tools
+
+----------------------------------------------------------
+End of Notes 📄
+----------------------------------------------------------
